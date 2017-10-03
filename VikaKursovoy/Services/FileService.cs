@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VikaKursovoy.Models;
 
 namespace VikaKursovoy.Services
 {
@@ -24,11 +25,36 @@ namespace VikaKursovoy.Services
 		{
 			return Task.Run(async () =>
 			{
-				if (obj == null)
+				if (obj is Product prod && prod.Id == 0 || obj is BaseInfo info && info.Id == 0)
 				{
-					throw new ArgumentNullException(nameof(obj), $"Обьект пуст. Тип : {obj.GetType()}");
+					Console.WriteLine($"Обьект пуст. Тип : {obj.GetType()}");
 				}
 				var data = await ReadJsonFromFile<T>(path, fileName);
+
+				if (data is List<Product> products && obj is Product product)
+				{
+					foreach (var p in products)
+					{
+						if (p.Id == product.Id || product.Id <= 0)
+						{
+							Console.WriteLine($"Недопустимый регистрационный номер : {p.GetType()} {product.Id}.");
+							return new List<T>();
+						}
+					}
+				}
+
+				if (data is List<BaseInfo> baseInfo && obj is BaseInfo b)
+				{
+					foreach (var i in baseInfo)
+					{
+						if (i.Id == b.Id || b.Id <= 0)
+						{
+							Console.WriteLine($"Недопустимый регистрационный номер : {i.GetType()} {b.Id}.");
+							return new List<T>();
+						}
+					}
+				}
+
 				data.Add(obj);
 
 				await WriteObjectToFile(path, fileName, data);
@@ -49,9 +75,10 @@ namespace VikaKursovoy.Services
 		{
 			return Task.Run(async () =>
 			{
-				if (obj == null)
+				if (obj is Product prod && prod.Id == 0 || obj is BaseInfo info && info.Id == 0)
 				{
-					throw new ArgumentNullException(nameof(obj), $"Обьект пуст. Тип : {obj.GetType()}");
+					Console.WriteLine($"Обьект пуст. Тип : {obj.GetType()}");
+					return new List<T>();
 				}
 				var data = await ReadJsonFromFile<T>(path, fileName);
 				data.Remove(obj);
@@ -79,11 +106,19 @@ namespace VikaKursovoy.Services
 				{
 					if (!sw.BaseStream.CanWrite)
 					{
-						throw new ArgumentNullException(nameof(obj), $"Ошибка записи в файл {path}/{fileName}.");
+						Console.WriteLine($"Ошибка записи в файл {path}/{fileName}.");
+						return;
 					}
-					if (obj.Count == 0)
+					if (obj == null || obj.Count == 0)
 					{
-						throw new ArgumentNullException(nameof(obj), $"Обьект пуст. Тип : {obj.GetType()}");
+						Console.WriteLine($"Обьект пуст. Тип : {obj.GetType()}");
+						return;
+					}
+
+					if (!ValidKey(obj))
+					{
+						Console.WriteLine($"Поле «регистрационный номер», содержит ошибку значения : {obj.GetType()}");
+						return;
 					}
 
 					var json = SerializationService.SerializationObject(obj);
@@ -108,20 +143,69 @@ namespace VikaKursovoy.Services
 				{
 					if (!sr.BaseStream.CanRead)
 					{
-						throw new ArgumentNullException($"Ошибка чтения файла {path}/{fileName}.");
+						Console.WriteLine($"Ошибка чтения файла {path}/{fileName}.");
+						return new List<T>();
 					}
 					var json = await sr.ReadToEndAsync();
 
 					var data = SerializationService.DeserializeJson<T>(json);
 
-					if (data.Count == 0)
+					if (data == null || data.Count == 0)
 					{
-						throw new Exception($"Считаный файл пуст. Принадлежит типу {data.GetType()}");
+						Console.WriteLine($"Считаный файл пуст. Имя файла : {fileName}");
+						return new List<T>();
 					}
 
-					return data;
+					if (!ValidKey(data))
+					{
+						Console.WriteLine($"Поле «регистрационный номер», содержит ошибку значения : {data.GetType()}");
+						return new List<T>();
+					}
+
+					return data;					
 				}
 			});
 		}
+
+		#region No-Public Method
+		/// <summary>
+		/// Проверка на уникальные значения при считывании.
+		/// </summary>
+		/// <typeparam name="T">Передаваемый тип.</typeparam>
+		/// <param name="data">Коллекция данных типа Т.</param>
+		/// <returns>Логическое значение.</returns>
+		private static bool ValidKey<T>(List<T> data)
+		{
+			if (data is List<Product> products)
+			{
+				foreach (var item in products)
+				{
+					if (products.Where(p => p.Id == item.Id).Count() > 1 || item.Id < 0)
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+			if (data is List<BaseInfo> info)
+			{
+				foreach (var item in info)
+				{
+					if (info.Where(p => p.Id == item.Id).Count() > 1 || item.Id < 0)
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+
+			if (data is List<ResultFile> result)
+			{
+				return true;
+			}
+
+			return false;
+		} 
+		#endregion
 	}
 }

@@ -35,6 +35,6 @@ namespace VikaKursovoy.Models
 		/// Цена.
 		/// </summary>
 		[JsonProperty("price")]
-		public float Price { get; set; }
+		public double Price { get; set; }
 	}
 }

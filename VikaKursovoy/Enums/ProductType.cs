@@ -6,10 +6,26 @@ using System.Threading.Tasks;
 
 namespace VikaKursovoy.Enums
 {
+	/// <summary>
+	/// Тип товаров.
+	/// </summary>
 	public enum ProductType
 	{
-		Chancery, //Канцелярия.
-		Equipment, //Оборудование.
-		Consumables //Расходные материалы.
+		/// <summary>
+		/// Канцелярские товары.
+		/// </summary>
+		Stationery,
+		/// <summary>
+		/// Продовольственные товары.
+		/// </summary>
+		Foodstuffs,
+		/// <summary>
+		/// Хозяйственные товары.
+		/// </summary>
+		HouseholdGoods,
+		/// <summary>
+		/// Игрушки
+		/// </summary>
+		Toys
 	}
 }

@@ -48,15 +48,6 @@ namespace VikaKursovoy.Services
 				var products = await FileService.ReadJsonFromFile<Product>(path, fileProduct);
 				var info = await FileService.ReadJsonFromFile<BaseInfo>(path, fileInfo);
 
-				if (products.Count == 0)
-				{
-					throw new ArgumentNullException(nameof(products));
-				}
-				if (info.Count == 0)
-				{
-					throw new ArgumentNullException(nameof(info));
-				}
-
 				foreach (var product in products)
 				{
 					foreach (var i in info)
@@ -74,6 +65,19 @@ namespace VikaKursovoy.Services
 					}
 				}
 
+				if (result.Count == 0)
+				{
+					Console.WriteLine($"Ошибка связывания записей в  таблицах.");
+					return new List<ResultFile>();
+				}
+
+				foreach (var item in result)
+				{
+					Console.WriteLine(ModelService.GetPropertys(item));
+				}
+
+				Console.WriteLine();
+
 				GetResultPrice(result);
 
 				await FileService.WriteObjectToFile(path, fileResult, result);
@@ -84,11 +88,13 @@ namespace VikaKursovoy.Services
 
 		public static void GetResultPrice(List<ResultFile> list)
 		{
-				Console.WriteLine("Канцелярия : " + list.Where(s => s.Type == Enums.ProductType.Chancery).Sum(s => s.Price));
+			Console.WriteLine("Канцелярия : " + list.Where(s => s.Type == Enums.ProductType.Stationery).Sum(s => s.Price));
 
-				Console.WriteLine("Расходные материалы : " + list.Where(s => s.Type == Enums.ProductType.Consumables).Sum(s => s.Price));
+			Console.WriteLine("Хозяйственные товары : " + list.Where(s => s.Type == Enums.ProductType.HouseholdGoods).Sum(s => s.Price));
 
-				Console.WriteLine("Оборудоние : " + list.Where(s => s.Type == Enums.ProductType.Equipment).Sum(s => s.Price));	
+			Console.WriteLine("Продовольственные товары : " + list.Where(s => s.Type == Enums.ProductType.Foodstuffs).Sum(s => s.Price));
+
+			Console.WriteLine("Продовольственные товары : " + list.Where(s => s.Type == Enums.ProductType.Toys).Sum(s => s.Price));
 		}
 	}
 }

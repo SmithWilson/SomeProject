@@ -14,7 +14,7 @@ namespace VikaKursovoy
 		static async Task Main(string[] args)
 		{
 			#region Fields
-			string path = Directory.GetCurrentDirectory();
+			var path = Directory.GetCurrentDirectory();
 			string fileProduct;
 			string fileInfo;
 			string fileResult;
@@ -39,37 +39,72 @@ namespace VikaKursovoy
 			//	new Product
 			//	{
 			//		Id = 1,
-			//		Name = $"Item 1",
-			//		Type = Enums.ProductType.Chancery,
-			//		Price = 3231
+			//		Name = "Ручка",
+			//		Type = Enums.ProductType.Stationery,
+			//		Price = 33.50
 			//	},
 			//	new Product
 			//	{
 			//		Id = 2,
-			//		Name = $"Item 2",
-			//		Type = Enums.ProductType.Equipment,
-			//		Price = 2123
+			//		Name = "Молоко",
+			//		Type = Enums.ProductType.Foodstuffs,
+			//		Price = 70.60
 			//	},
 			//	new Product
 			//	{
 			//		Id = 3,
-			//		Name = $"Item 3",
-			//		Type = Enums.ProductType.Equipment,
-			//		Price = 4324
+			//		Name = "Мыло",
+			//		Type = Enums.ProductType.HouseholdGoods,
+			//		Price = 20.50
 			//	},
 			//	new Product
 			//	{
 			//		Id = 4,
-			//		Name = $"Item 4",
-			//		Type = Enums.ProductType.Consumables,
-			//		Price = 3214
+			//		Name = "Крем для рук",
+			//		Type = Enums.ProductType.HouseholdGoods,
+			//		Price = 70
 			//	},
 			//	new Product
 			//	{
 			//		Id = 5,
-			//		Name = $"Item 5",
-			//		Type = Enums.ProductType.Chancery,
-			//		Price = 1123
+			//		Name = "Плюшевый мишка",
+			//		Type = Enums.ProductType.Toys,
+			//		Price = 150
+			//	},
+			//	new Product
+			//	{
+			//		Id = 6,
+			//		Name = "Пазл",
+			//		Type = Enums.ProductType.Toys,
+			//		Price = 100.5
+			//	},
+			//	new Product
+			//	{
+			//		Id = 7,
+			//		Name = "Тетрис",
+			//		Type = Enums.ProductType.Toys,
+			//		Price = 300.6
+			//	},
+			//	new Product
+			//	{
+			//		Id = 8,
+			//		Name = "Мозаика",
+			//		Type = Enums.ProductType.Toys,
+			//		Price = 120
+			//	},
+			//	new Product
+			//	{
+			//		Id = 9,
+			//		Name = "Бумага",
+			//		Type = Enums.ProductType.Stationery,
+			//		Price = 155.9
+			//	},
+			//	new Product
+			//	{
+			//		Id = 10,
+			//		Name = "Карандаш",
+			//		Type = Enums.ProductType.Stationery,
+			//		Price = 20
 			//	}
 			//};
 
@@ -78,26 +113,62 @@ namespace VikaKursovoy
 			//	new BaseInfo
 			//	{
 			//		Id = 1,
-			//		Departament = "D1",
-			//		Responsible = "R1"
+			//		Departament = "Отдел N3",
+			//		Responsible = "Романова К.Л"
+			//	},
+			//	new BaseInfo
+			//	{
+			//		Id = 2,
+			//		Departament = "Отдел N2",
+			//		Responsible = "Сорокина Т.Е"
 			//	},
 			//	new BaseInfo
 			//	{
 			//		Id = 3,
-			//		Departament = "D3",
-			//		Responsible = "R3"
-			//	},
-			//	new BaseInfo
-			//	{
-			//		Id = 5,
-			//		Departament = "D5",
-			//		Responsible = "R5"
+			//		Departament = "Отдел N4",
+			//		Responsible = "Иванова Г.А"
 			//	},
 			//	new BaseInfo
 			//	{
 			//		Id = 4,
-			//		Departament = "D4",
-			//		Responsible = "R4"
+			//		Departament = "Отдел N4",
+			//		Responsible = "Иванова Г.А"
+			//	},
+			//	new BaseInfo
+			//	{
+			//		Id = 5,
+			//		Departament = "Отдел N1",
+			//		Responsible = "Попова В.И."
+			//	},
+			//	new BaseInfo
+			//	{
+			//		Id = 6,
+			//		Departament = "Отдел N1",
+			//		Responsible = "Попова В.И."
+			//	},
+			//	new BaseInfo
+			//	{
+			//		Id = 7,
+			//		Departament = "Отдел N1",
+			//		Responsible = "Попова В.И."
+			//	},
+			//	new BaseInfo
+			//	{
+			//		Id = 8,
+			//		Departament = "Отдел N1",
+			//		Responsible = "Попова В.И."
+			//	},
+			//	new BaseInfo
+			//	{
+			//		Id = 9,
+			//		Departament = "Отдел N3",
+			//		Responsible = "Романова К.Л"
+			//	},
+			//	new BaseInfo
+			//	{
+			//		Id = 10,
+			//		Departament = "Отдел N3",
+			//		Responsible = "Романова К.Л"
 			//	}
 			//};
 
@@ -138,11 +209,7 @@ namespace VikaKursovoy
 					case 3:
 						var selected = ModelService.CreateSelectionStudent(path, fileProduct, fileInfo, fileResult);
 
-						foreach (var item in selected)
-						{
-							Console.WriteLine(ModelService.GetPropertys(item));
-						}
-						Console.WriteLine();
+						
 
 						Console.WriteLine();
 						break;
