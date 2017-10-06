@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using VikaKursovoy.Services;
 
 namespace VikaKursovoy.Models
 {
@@ -12,6 +13,7 @@ namespace VikaKursovoy.Models
 	/// </summary>
 	public class BaseInfo
 	{
+		private string _responsible;
 		/// <summary>
 		/// Регистрационный номер.
 		/// </summary>

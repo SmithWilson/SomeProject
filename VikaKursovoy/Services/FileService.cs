@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using VikaKursovoy.Models;
 
@@ -102,7 +103,7 @@ namespace VikaKursovoy.Services
 		{
 			return Task.Run(async () =>
 			{
-				using (var sw = new StreamWriter(path + "/" + fileName, false, System.Text.Encoding.Default))
+				using (var sw = new StreamWriter(path + "/" + fileName, false, System.Text.Encoding.UTF8))
 				{
 					if (!sw.BaseStream.CanWrite)
 					{
@@ -114,8 +115,7 @@ namespace VikaKursovoy.Services
 						Console.WriteLine($"Обьект пуст. Тип : {obj.GetType()}");
 						return;
 					}
-
-					if (!ValidKey(obj))
+					if (!ValidedKey(obj))
 					{
 						Console.WriteLine($"Поле «регистрационный номер», содержит ошибку значения : {obj.GetType()}");
 						return;
@@ -139,7 +139,7 @@ namespace VikaKursovoy.Services
 		{
 			return Task.Run(async () =>
 			{
-				using (var sr = new StreamReader(path + "/" + fileName))
+				using (var sr = new StreamReader(path + "/" + fileName, Encoding.UTF8))
 				{
 					if (!sr.BaseStream.CanRead)
 					{
@@ -156,10 +156,34 @@ namespace VikaKursovoy.Services
 						return new List<T>();
 					}
 
-					if (!ValidKey(data))
+					if (!ValidedKey(data))
 					{
 						Console.WriteLine($"Поле «регистрационный номер», содержит ошибку значения : {data.GetType()}");
 						return new List<T>();
+					}
+
+					if (data is List<BaseInfo> infos)
+					{
+						foreach (var info in infos)
+						{
+							if (!ValidedString(info.Responsible))
+							{
+								Console.WriteLine($"Поле «Материально ответсвтенное лицо», содержит недопустимые символы : {info.Responsible}");
+								return new List<T>();
+							} 
+						}
+					}
+
+					if (data is List<Product> products)
+					{
+						foreach (var product in products)
+						{
+							if (!ValidedString(product.Name))
+							{
+								Console.WriteLine($"Поле «Имя», содержит недопустимые символы : {product.Name}");
+								return new List<T>();
+							}
+						}
 					}
 
 					return data;					
@@ -174,7 +198,7 @@ namespace VikaKursovoy.Services
 		/// <typeparam name="T">Передаваемый тип.</typeparam>
 		/// <param name="data">Коллекция данных типа Т.</param>
 		/// <returns>Логическое значение.</returns>
-		private static bool ValidKey<T>(List<T> data)
+		private static bool ValidedKey<T>(List<T> data)
 		{
 			if (data is List<Product> products)
 			{
@@ -205,7 +229,28 @@ namespace VikaKursovoy.Services
 			}
 
 			return false;
-		} 
+		}
+
+		/// <summary>
+		/// Проверка на содержание русского и латинского алфавита.
+		/// </summary>
+		/// <param name="value">Строка.</param>
+		/// <returns>Логическое значение.</returns>
+		private static bool ValidedString(string value)
+		{
+			var symbols = new char[] { '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-',
+									  '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_',
+									  '`', '{', '|', '}', '~', '0', '1', '2','3','4','5','6','7','8','9'};
+
+			foreach (var symbol in symbols)
+			{
+				if (value.Contains(symbol))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
 		#endregion
 	}
 }

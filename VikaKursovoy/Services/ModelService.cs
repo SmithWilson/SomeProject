@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using VikaKursovoy.Models;
 
@@ -15,7 +16,7 @@ namespace VikaKursovoy.Services
 		/// <param name="product"><see cref="Product"/></param>
 		/// <returns>Строка.</returns>
 		public static string GetPropertys(Product product)
-			=> Task.Run(() => $"{product.Id}	{product.Name}	{product.Type}	{product.Price}").Result;
+			=> Task.Run(() => String.Format("{0,-10}{1,-30}{2,-30}{3,-10}",product.Id,product.Name,product.Type,product.Price)).Result;
 
 		/// <summary>
 		/// Получение полей(Перегрузка).
@@ -23,7 +24,7 @@ namespace VikaKursovoy.Services
 		/// <param name="baseInfo"><see cref="BaseInfo"/></param>
 		/// <returns>Строка.</returns>
 		public static string GetPropertys(BaseInfo baseInfo)
-			=> Task.Run(() => $"{baseInfo.Id}	{baseInfo.Responsible}	{baseInfo.Departament}").Result;
+			=> Task.Run(() => String.Format("{0,-10}{1,-30}{2,-30}",baseInfo.Id,baseInfo.Responsible,baseInfo.Departament)).Result;
 
 		/// <summary>
 		/// Получение полей(Перегрузка).
@@ -31,7 +32,8 @@ namespace VikaKursovoy.Services
 		/// <param name="result"><see cref="ResultFile"/></param>
 		/// <returns>Строка.</returns>
 		public static string GetPropertys(ResultFile result)
-			=> Task.Run(() => $"{result.Name}	{result.Department}	{result.Type}	{result.Price}").Result;
+			=> Task.Run(() => String.Format("{0,-20}{1,-30}{2,-30}{3,-20}",result.Name,result.Department,result.Type,result.Price)).Result;
+
 
 		/// <summary>
 		/// Создание итоговой таблицы.

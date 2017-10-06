@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using VikaKursovoy.Enums;
+using VikaKursovoy.Services;
 
 namespace VikaKursovoy.Models
 {
@@ -13,6 +14,7 @@ namespace VikaKursovoy.Models
 	/// </summary>
 	public class Product
 	{
+		private string _name;
 		/// <summary>
 		/// Регистрационный номер.
 		/// </summary>
