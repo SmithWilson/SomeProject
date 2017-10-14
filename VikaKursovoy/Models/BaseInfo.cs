@@ -13,7 +13,6 @@ namespace VikaKursovoy.Models
 	/// </summary>
 	public class BaseInfo
 	{
-		private string _responsible;
 		/// <summary>
 		/// Регистрационный номер.
 		/// </summary>

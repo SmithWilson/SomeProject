@@ -38,7 +38,7 @@ namespace VikaKursovoy.Services
 					{
 						if (p.Id == product.Id || product.Id <= 0)
 						{
-							Console.WriteLine($"Недопустимый регистрационный номер : {p.GetType()} {product.Id}.");
+							Console.WriteLine($"Недопустимый регистрационный номер : {product.Id}.");
 							return new List<T>();
 						}
 					}
@@ -50,7 +50,7 @@ namespace VikaKursovoy.Services
 					{
 						if (i.Id == b.Id || b.Id <= 0)
 						{
-							Console.WriteLine($"Недопустимый регистрационный номер : {i.GetType()} {b.Id}.");
+							Console.WriteLine($"Недопустимый регистрационный номер : {b.Id}.");
 							return new List<T>();
 						}
 					}
@@ -78,7 +78,7 @@ namespace VikaKursovoy.Services
 			{
 				if (obj is Product prod && prod.Id == 0 || obj is BaseInfo info && info.Id == 0)
 				{
-					Console.WriteLine($"Обьект пуст. Тип : {obj.GetType()}");
+					Console.WriteLine($"Обьект пуст.");
 					return new List<T>();
 				}
 				var data = await ReadJsonFromFile<T>(path, fileName);
@@ -112,12 +112,11 @@ namespace VikaKursovoy.Services
 					}
 					if (obj == null || obj.Count == 0)
 					{
-						Console.WriteLine($"Обьект пуст. Тип : {obj.GetType()}");
+						Console.WriteLine($"Обьект пуст.");
 						return;
 					}
 					if (!ValidedKey(obj))
 					{
-						Console.WriteLine($"Поле «регистрационный номер», содержит ошибку значения : {obj.GetType()}");
 						return;
 					}
 
@@ -138,7 +137,7 @@ namespace VikaKursovoy.Services
 		public static Task<List<T>> ReadJsonFromFile<T>(string path, string fileName)
 		{
 			return Task.Run(async () =>
-			{
+			{	
 				using (var sr = new StreamReader(path + "/" + fileName, Encoding.UTF8))
 				{
 					if (!sr.BaseStream.CanRead)
@@ -158,7 +157,7 @@ namespace VikaKursovoy.Services
 
 					if (!ValidedKey(data))
 					{
-						Console.WriteLine($"Поле «регистрационный номер», содержит ошибку значения : {data.GetType()}");
+						
 						return new List<T>();
 					}
 
@@ -171,6 +170,14 @@ namespace VikaKursovoy.Services
 								Console.WriteLine($"Поле «Материально ответсвтенное лицо», содержит недопустимые символы : {info.Responsible}");
 								return new List<T>();
 							} 
+						}
+						foreach (var info in infos)
+						{
+							if (!ValidedString(info.Departament, true))
+							{
+								Console.WriteLine($"Поле «Название отдела», содержит недопустимые символы : {info.Departament}");
+								return new List<T>();
+							}
 						}
 					}
 
@@ -206,6 +213,7 @@ namespace VikaKursovoy.Services
 				{
 					if (products.Where(p => p.Id == item.Id).Count() > 1 || item.Id < 0)
 					{
+						Console.WriteLine($"Поле «регистрационный номер», содержит ошибку значения : {item.Id}.");
 						return false;
 					}
 				}
@@ -217,6 +225,7 @@ namespace VikaKursovoy.Services
 				{
 					if (info.Where(p => p.Id == item.Id).Count() > 1 || item.Id < 0)
 					{
+						Console.WriteLine($"Поле «регистрационный номер», содержит ошибку значения : {item.Id}.");
 						return false;
 					}
 				}
@@ -241,6 +250,23 @@ namespace VikaKursovoy.Services
 			var symbols = new char[] { '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-',
 									  '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_',
 									  '`', '{', '|', '}', '~', '0', '1', '2','3','4','5','6','7','8','9'};
+
+			foreach (var symbol in symbols)
+			{
+				if (value.Contains(symbol))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+
+		private static bool ValidedString(string value, bool flag)
+		{
+			var symbols = new char[] { '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-',
+									  '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_',
+									  '`', '{', '|', '}', '~'};
 
 			foreach (var symbol in symbols)
 			{
